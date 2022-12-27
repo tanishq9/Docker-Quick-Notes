@@ -36,6 +36,9 @@
    - WORKDIR [path], creates a workspace/default working directory, if we ignore, root directory would be used.
       - The WORKDIR command is used to define the working directory of a Docker container at any given time. The command is specified in the Dockerfile. Any RUN , CMD , ADD , COPY , or ENTRYPOINT command will be executed in the specified working directory.
    - EXPOSE [port], exposes port.
+      - EXPOSE is a way of documenting
+      - --publish (or -p) is a way of mapping a host port to a running container port
+      - Expose is basically documentation, and not using it does not restrict access.
    - CMD [command] and ENTRYPOINT [command], command to be executed when container is created.
       - In Dockerfiles, an ENTRYPOINT instruction is used to set executables that will always run when the container is initiated. Unlike CMD commands, ENTRYPOINT commands cannot be ignored or overridden.
 - Layers 
@@ -215,4 +218,20 @@ services:
       restart: always
       ports:
       - 8080:8080
+```
+
+## Example - Mockserver
+
+```
+version: "3.0"
+services:
+  mock:
+    image: mockserver/mockserver
+    ports:
+      - "1080:1080"
+    volumes: 
+      - "./docker-test-data/data/init.json:/init.json" # relative path or else it is considered absolute path
+    environment:
+      MOCKSERVER_INITIALIZATION_JSON_PATH: /init.json
+# docker compose -f mockserver-demo.yaml up / down
 ```
